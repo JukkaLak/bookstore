@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Bean;
 
 import hhsof3.bookstore.domain.Book;
 import hhsof3.bookstore.domain.BookRepository;
+import hhsof3.bookstore.domain.Category;
+import hhsof3.bookstore.domain.CategoryRepository;
 
 @SpringBootApplication
 public class BookstoreApplication {
@@ -20,13 +22,20 @@ public class BookstoreApplication {
 	}
 	
 	@Bean
-	public CommandLineRunner bookDemo(BookRepository bookRepository) {
+	public CommandLineRunner bookDemo(BookRepository bookRepository, CategoryRepository categoryRepository) {
 		return (args) -> {
-			Book book1 = new Book("Myyrä", "Jari Tervo", 2004, 0001, 15.0);
-			Book book2 = new Book("1984", "George Orwell", 1949, 0002, 10.0);
-			bookRepository.save(book1);
-			bookRepository.save(book2);
+			log.info("Save some categories");
+			Category category1 = new Category("Scifi");
+			categoryRepository.save(category1);
+			Category category2 = new Category("Fantasy");
+			categoryRepository.save(category2);
+			Category category3 = new Category("History");
+			categoryRepository.save(category3);
+			log.info("Save some books");
+			bookRepository.save(new Book("Myyrä", "Jari Tervo", 2004, 0001, 10.0, category3));
+			bookRepository.save(new Book("1984", "George Orwell", 1949, 0002, 12.0, category1));
 			
+			log.info("Fetch all books");
 			for(Book book : bookRepository.findAll()) {
 				log.info(book.toString());
 			}
